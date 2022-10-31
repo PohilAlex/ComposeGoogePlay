@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ComposePlay</string>
+    <string name="install">Install</string>
+    <string name="screenshot_description">Application screenshot</string>
+    <string name="description_app_icon">Application Icon</string>
+    <string name="about_app">About this app</string>
+    <string name="data_safety">Data safety</string>
+</resources>
