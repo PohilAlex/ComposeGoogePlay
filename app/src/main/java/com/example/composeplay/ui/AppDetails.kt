@@ -8,10 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composeplay.R
 import com.example.composeplay.ui.theme.ComposePlayTheme
-import com.example.composeplay.ui.theme.GeneralInfoDescription
 import com.example.composeplay.ui.theme.Green
 
 
@@ -127,7 +123,7 @@ private fun DetailsRating(scope: RowScope) {
             }
             Text(
                 text = "66K reviews",
-                style = GeneralInfoDescription,
+                style = MaterialTheme.typography.caption,
             )
         }
     }
@@ -147,7 +143,7 @@ private fun DetailsSize(scope: RowScope) {
             )
             Text(
                 text = "10MB",
-                style = GeneralInfoDescription,
+                style = MaterialTheme.typography.caption,
             )
         }
     }
@@ -167,7 +163,7 @@ private fun DetailsAge(scope: RowScope) {
             )
             Text(
                 text = "Rated for 3+",
-                style = GeneralInfoDescription,
+                style = MaterialTheme.typography.caption,
             )
         }
     }
@@ -207,13 +203,11 @@ private fun AboutSection() {
         ) {
             Text(
                 text = stringResource(R.string.about_app),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium,
                 modifier = Modifier
                     .weight(1f)
                     .padding(vertical = 8.dp),
                 color = Color.Black,
-                letterSpacing = 0.5.sp,
+                style = MaterialTheme.typography.subtitle1
             )
             Image(
                 painter = painterResource(id = R.drawable.ic_arrow_forward),
@@ -235,11 +229,9 @@ private fun AboutSection() {
         ) {
             Text(
                 text = "Productivity",
-                letterSpacing = 0.5.sp,
                 color = Color.Black
             )
         }
-
     }
 }
 
@@ -254,13 +246,11 @@ private fun SafetySection() {
         ) {
             Text(
                 text = stringResource(R.string.data_safety),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium,
                 modifier = Modifier
                     .weight(1f)
                     .padding(vertical = 8.dp),
                 color = Color.Black,
-                letterSpacing = 0.5.sp,
+                style = MaterialTheme.typography.subtitle1
             )
             Image(
                 painter = painterResource(id = R.drawable.ic_arrow_forward),
