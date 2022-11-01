@@ -2,14 +2,31 @@ package com.example.composeplay.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,20 +37,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.composeplay.model.AppDetailsViewModel
+import com.example.composeplay.model.AppInfo
 import com.example.composeplay.R
+import com.example.composeplay.model.gitHubInfo
 import com.example.composeplay.ui.theme.ComposePlayTheme
 
 
 @Composable
-fun ApplicationFullInfo() {
+fun ApplicationFullInfoScreen(viewModel: AppDetailsViewModel) {
+    val state = viewModel.getAppInfo().collectAsState()
+    ApplicationFullInfo(state.value)
+}
+
+@Composable
+private fun ApplicationFullInfo(appInfo: AppInfo) {
     Column(modifier = Modifier
         .padding(horizontal = 24.dp)
         .verticalScroll(rememberScrollState())
     ) {
         Spacer(Modifier.height(24.dp))
-        AppHeader()
+        AppHeader(appInfo)
         Spacer(Modifier.height(16.dp))
-        AppGeneralInfo()
+        AppGeneralInfo(appInfo)
         Spacer(Modifier.height(16.dp))
         Button(
             modifier = Modifier.fillMaxWidth(),
@@ -46,17 +72,17 @@ fun ApplicationFullInfo() {
             )
         }
         Spacer(Modifier.height(16.dp))
-        ScreenshotCarousel()
+        ScreenshotCarousel(appInfo.screenshotRes)
         Spacer(Modifier.height(16.dp))
-        AboutSection()
+        AboutSection(appInfo.aboutApp, appInfo.tags)
         Spacer(Modifier.height(16.dp))
-        SafetySection()
+        SafetySection(appInfo.dataSafety)
         Spacer(Modifier.height(36.dp))
     }
 }
 
 @Composable
-private fun AppHeader() {
+private fun AppHeader(appInfo: AppInfo) {
     Row(modifier = Modifier.padding(top = 12.dp)) {
         Image(
             painter = painterResource(id = R.drawable.app_logo),
@@ -65,12 +91,12 @@ private fun AppHeader() {
         )
         Column {
             Text(
-                text = "GitHub",
+                text = appInfo.name,
                 modifier = Modifier.padding(start = 24.dp),
                 fontSize = 24.sp
             )
             Text(
-                text = "GitHub",
+                text = appInfo.publisherName,
                 Modifier.padding(start = 24.dp),
                 color = MaterialTheme.colors.primary,
                 fontSize = 16.sp
@@ -80,12 +106,12 @@ private fun AppHeader() {
 }
 
 @Composable
-private fun AppGeneralInfo() {
+private fun AppGeneralInfo(appInfo: AppInfo) {
     Row(
         modifier = Modifier.height(IntrinsicSize.Min),
         verticalAlignment = Alignment.Bottom
     ) {
-        DetailsRating(this)
+        DetailsRating(this, appInfo)
         Divider(
             color = Color.Gray,
             modifier = Modifier
@@ -93,7 +119,7 @@ private fun AppGeneralInfo() {
                 .width(1.dp)
                 .padding(vertical = 8.dp),
         )
-        DetailsSize(this)
+        DetailsSize(this, appInfo)
         Divider(
             color = Color.Gray,
             modifier = Modifier
@@ -101,12 +127,12 @@ private fun AppGeneralInfo() {
                 .width(1.dp)
                 .padding(vertical = 8.dp),
         )
-        DetailsAge(this)
+        DetailsAge(this, appInfo)
     }
 }
 
 @Composable
-private fun DetailsRating(scope: RowScope) {
+private fun DetailsRating(scope: RowScope, appInfo: AppInfo) {
     scope.apply {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -114,7 +140,7 @@ private fun DetailsRating(scope: RowScope) {
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "4.8",
+                    text = appInfo.rating,
                     fontWeight = FontWeight.SemiBold,
                 )
                 Image(
@@ -125,7 +151,7 @@ private fun DetailsRating(scope: RowScope) {
                 )
             }
             Text(
-                text = "66K reviews",
+                text = appInfo.reviewCount,
                 style = MaterialTheme.typography.caption,
             )
         }
@@ -133,7 +159,7 @@ private fun DetailsRating(scope: RowScope) {
 }
 
 @Composable
-private fun DetailsSize(scope: RowScope) {
+private fun DetailsSize(scope: RowScope, appInfo: AppInfo) {
     scope.apply {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -146,7 +172,7 @@ private fun DetailsSize(scope: RowScope) {
                 modifier = Modifier.size(24.dp)
             )
             Text(
-                text = "10MB",
+                text = appInfo.size,
                 style = MaterialTheme.typography.caption,
             )
         }
@@ -154,7 +180,7 @@ private fun DetailsSize(scope: RowScope) {
 }
 
 @Composable
-private fun DetailsAge(scope: RowScope) {
+private fun DetailsAge(scope: RowScope, appInfo: AppInfo) {
     scope.apply {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -167,7 +193,7 @@ private fun DetailsAge(scope: RowScope) {
                 modifier = Modifier.size(24.dp)
             )
             Text(
-                text = "Rated for 3+",
+                text = appInfo.ageRating,
                 style = MaterialTheme.typography.caption,
             )
         }
@@ -175,19 +201,9 @@ private fun DetailsAge(scope: RowScope) {
 }
 
 @Composable
-private fun ScreenshotCarousel() {
+private fun ScreenshotCarousel(screenshotRes: List<Int>) {
     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        val list = listOf(
-            R.drawable.app_screen_1,
-            R.drawable.app_screen_2,
-            R.drawable.app_screen_1,
-            R.drawable.app_screen_2,
-            R.drawable.app_screen_1,
-            R.drawable.app_screen_2,
-            R.drawable.app_screen_1,
-            R.drawable.app_screen_2
-        )
-        items(list) {
+        items(screenshotRes) {
             Image(
                 painter = painterResource(id = it),
                 contentDescription = stringResource(R.string.screenshot_description),
@@ -198,7 +214,7 @@ private fun ScreenshotCarousel() {
 }
 
 @Composable
-private fun AboutSection() {
+private fun AboutSection(aboutApp: String, tags: List<String>) {
     Column {
         Button(
             colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
@@ -221,28 +237,37 @@ private fun AboutSection() {
             )
         }
         Text(
-            "Triage notifications, review, comment and merge, right from your mobile device",
+            text = aboutApp,
             fontSize = 14.sp,
             lineHeight = 22.sp,
             modifier = Modifier.padding(bottom = 12.dp)
         )
-        Button(
-            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
-            shape = RoundedCornerShape(8.dp),
-            border = BorderStroke(0.5.dp, MaterialTheme.colors.onSurface),
-            elevation = null,
-            onClick = { /*TODO*/ }
-        ) {
-            Text(
-                text = "Productivity",
-                color = MaterialTheme.colors.onSurface
-            )
+        AboutTagList(tags)
+    }
+}
+
+@Composable
+private fun AboutTagList(tags: List<String>) {
+    LazyRow {
+        items(tags) {
+            Button(
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
+                shape = RoundedCornerShape(8.dp),
+                border = BorderStroke(0.5.dp, MaterialTheme.colors.onSurface),
+                elevation = null,
+                onClick = { /*TODO*/ }
+            ) {
+                Text(
+                    text = it,
+                    color = MaterialTheme.colors.onSurface
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun SafetySection() {
+private fun SafetySection(dataSafety: String) {
     Column {
         Button(
             colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
@@ -265,9 +290,7 @@ private fun SafetySection() {
             )
         }
         Text(
-            "Safety starts with understanding how develops collect and share your data. " +
-                    "Data privacy and security practices may very based on your use, region and age." +
-                    " The developer provided this information and may update it over time",
+            text = dataSafety,
             fontSize = 14.sp,
             lineHeight = 22.sp,
         )
@@ -278,7 +301,7 @@ private fun SafetySection() {
 @Composable
 fun DefaultPreview() {
     ComposePlayTheme {
-        ApplicationFullInfo()
+        ApplicationFullInfo(gitHubInfo)
     }
 }
 
@@ -286,6 +309,6 @@ fun DefaultPreview() {
 @Composable
 fun DefaultPreviewDark() {
     ComposePlayTheme(darkTheme = true) {
-        ApplicationFullInfo()
+        ApplicationFullInfo(gitHubInfo)
     }
 }
