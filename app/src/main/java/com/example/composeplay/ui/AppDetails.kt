@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -21,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composeplay.R
 import com.example.composeplay.ui.theme.ComposePlayTheme
-import com.example.composeplay.ui.theme.Green
 
 
 @Composable
@@ -36,12 +36,14 @@ fun ApplicationFullInfo() {
         AppGeneralInfo()
         Spacer(Modifier.height(16.dp))
         Button(
-            colors = ButtonDefaults.buttonColors(Green),
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             onClick = { /*TODO*/ },
         ) {
-            Text(text = stringResource(R.string.install), color = Color.White, letterSpacing = 0.5.sp)
+            Text(
+                text = stringResource(R.string.install),
+                letterSpacing = 0.5.sp
+            )
         }
         Spacer(Modifier.height(16.dp))
         ScreenshotCarousel()
@@ -49,7 +51,7 @@ fun ApplicationFullInfo() {
         AboutSection()
         Spacer(Modifier.height(16.dp))
         SafetySection()
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(36.dp))
     }
 }
 
@@ -70,7 +72,7 @@ private fun AppHeader() {
             Text(
                 text = "GitHub",
                 Modifier.padding(start = 24.dp),
-                color = Green,
+                color = MaterialTheme.colors.primary,
                 fontSize = 16.sp
             )
         }
@@ -117,7 +119,8 @@ private fun DetailsRating(scope: RowScope) {
                 )
                 Image(
                     painter = painterResource(R.drawable.ic_star),
-                    contentDescription = "Content Star image",
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface),
                     modifier = Modifier.size(14.dp)
                 )
             }
@@ -139,6 +142,7 @@ private fun DetailsSize(scope: RowScope) {
             Image(
                 painter = painterResource(R.drawable.ic_download),
                 contentDescription = null,
+                colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface),
                 modifier = Modifier.size(24.dp)
             )
             Text(
@@ -159,6 +163,7 @@ private fun DetailsAge(scope: RowScope) {
             Image(
                 painter = painterResource(R.drawable.ic_looks_3),
                 contentDescription = null,
+                colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface),
                 modifier = Modifier.size(24.dp)
             )
             Text(
@@ -196,7 +201,7 @@ private fun ScreenshotCarousel() {
 private fun AboutSection() {
     Column {
         Button(
-            colors = ButtonDefaults.buttonColors(Color.White),
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
             elevation = null,
             contentPadding = PaddingValues(0.dp),
             onClick = {/*TODO*/ }
@@ -206,12 +211,13 @@ private fun AboutSection() {
                 modifier = Modifier
                     .weight(1f)
                     .padding(vertical = 8.dp),
-                color = Color.Black,
+                color = MaterialTheme.colors.onSurface,
                 style = MaterialTheme.typography.subtitle1
             )
             Image(
                 painter = painterResource(id = R.drawable.ic_arrow_forward),
-                contentDescription = null
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface)
             )
         }
         Text(
@@ -221,15 +227,15 @@ private fun AboutSection() {
             modifier = Modifier.padding(bottom = 12.dp)
         )
         Button(
-            colors = ButtonDefaults.buttonColors(Color.White),
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
             shape = RoundedCornerShape(8.dp),
-            border = BorderStroke(1.dp, Color.LightGray),
+            border = BorderStroke(0.5.dp, MaterialTheme.colors.onSurface),
             elevation = null,
             onClick = { /*TODO*/ }
         ) {
             Text(
                 text = "Productivity",
-                color = Color.Black
+                color = MaterialTheme.colors.onSurface
             )
         }
     }
@@ -239,7 +245,7 @@ private fun AboutSection() {
 private fun SafetySection() {
     Column {
         Button(
-            colors = ButtonDefaults.buttonColors(Color.White),
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
             elevation = null,
             contentPadding = PaddingValues(0.dp),
             onClick = {/*TODO*/ }
@@ -249,12 +255,13 @@ private fun SafetySection() {
                 modifier = Modifier
                     .weight(1f)
                     .padding(vertical = 8.dp),
-                color = Color.Black,
+                color = MaterialTheme.colors.onSurface,
                 style = MaterialTheme.typography.subtitle1
             )
             Image(
                 painter = painterResource(id = R.drawable.ic_arrow_forward),
-                contentDescription = null
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface)
             )
         }
         Text(
@@ -263,7 +270,6 @@ private fun SafetySection() {
                     " The developer provided this information and may update it over time",
             fontSize = 14.sp,
             lineHeight = 22.sp,
-            modifier = Modifier.padding(bottom = 12.dp)
         )
     }
 }
@@ -272,6 +278,14 @@ private fun SafetySection() {
 @Composable
 fun DefaultPreview() {
     ComposePlayTheme {
+        ApplicationFullInfo()
+    }
+}
+
+@Preview
+@Composable
+fun DefaultPreviewDark() {
+    ComposePlayTheme(darkTheme = true) {
         ApplicationFullInfo()
     }
 }
