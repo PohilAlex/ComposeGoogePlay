@@ -37,6 +37,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.composeplay.model.AppDetailsViewModel
 import com.example.composeplay.model.AppInfo
 import com.example.composeplay.R
@@ -45,8 +47,9 @@ import com.example.composeplay.ui.theme.ComposePlayTheme
 
 
 @Composable
+@OptIn(ExperimentalLifecycleComposeApi::class)
 fun ApplicationFullInfoScreen(viewModel: AppDetailsViewModel) {
-    val state = viewModel.getAppInfo().collectAsState()
+    val state = viewModel.getAppInfo().collectAsStateWithLifecycle()
     ApplicationFullInfo(state.value)
 }
 
