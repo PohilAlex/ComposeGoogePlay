@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import com.example.composeplay.model.AppDetailsViewModel
+import com.example.composeplay.ui.AppNavGraph
 import com.example.composeplay.ui.ApplicationFullInfoScreen
 import com.example.composeplay.ui.theme.ComposePlayTheme
 
@@ -24,7 +25,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    ApplicationFullInfoScreen(viewModel)
+                    AppNavGraph(viewModel = viewModel)
                 }
             }
         }

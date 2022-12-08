@@ -26,7 +26,6 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,13 +47,19 @@ import com.example.composeplay.ui.theme.ComposePlayTheme
 
 @Composable
 @OptIn(ExperimentalLifecycleComposeApi::class)
-fun ApplicationFullInfoScreen(viewModel: AppDetailsViewModel) {
+fun ApplicationFullInfoScreen(
+    viewModel: AppDetailsViewModel,
+    openAboutScreen: () -> Unit
+) {
     val state = viewModel.getAppInfo().collectAsStateWithLifecycle()
-    ApplicationFullInfo(state.value)
+    ApplicationFullInfo(state.value, openAboutScreen)
 }
 
 @Composable
-private fun ApplicationFullInfo(appInfo: AppInfo) {
+private fun ApplicationFullInfo(
+    appInfo: AppInfo,
+    openAboutScreen: () -> Unit
+) {
     Column(modifier = Modifier
         .padding(horizontal = 24.dp)
         .verticalScroll(rememberScrollState())
@@ -77,7 +82,7 @@ private fun ApplicationFullInfo(appInfo: AppInfo) {
         Spacer(Modifier.height(16.dp))
         ScreenshotCarousel(appInfo.screenshotRes)
         Spacer(Modifier.height(16.dp))
-        AboutSection(appInfo.aboutApp, appInfo.tags)
+        AboutSection(appInfo.aboutApp, appInfo.tags, openAboutScreen)
         Spacer(Modifier.height(16.dp))
         SafetySection(appInfo.dataSafety)
         Spacer(Modifier.height(36.dp))
@@ -217,13 +222,16 @@ private fun ScreenshotCarousel(screenshotRes: List<Int>) {
 }
 
 @Composable
-private fun AboutSection(aboutApp: String, tags: List<String>) {
+private fun AboutSection(
+    aboutApp: String,
+    tags: List<String>,
+    openAboutScreen: () -> Unit) {
     Column {
         Button(
             colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
             elevation = null,
             contentPadding = PaddingValues(0.dp),
-            onClick = {/*TODO*/ }
+            onClick = { openAboutScreen() }
         ) {
             Text(
                 text = stringResource(R.string.about_app),
@@ -304,7 +312,10 @@ private fun SafetySection(dataSafety: String) {
 @Composable
 fun DefaultPreview() {
     ComposePlayTheme {
-        ApplicationFullInfo(gitHubInfo)
+        ApplicationFullInfo(
+            appInfo = gitHubInfo,
+            openAboutScreen = {}
+        )
     }
 }
 
@@ -312,6 +323,9 @@ fun DefaultPreview() {
 @Composable
 fun DefaultPreviewDark() {
     ComposePlayTheme(darkTheme = true) {
-        ApplicationFullInfo(gitHubInfo)
+        ApplicationFullInfo(
+            appInfo = gitHubInfo,
+            openAboutScreen = {}
+        )
     }
 }

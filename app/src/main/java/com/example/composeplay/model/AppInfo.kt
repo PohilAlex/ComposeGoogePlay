@@ -39,7 +39,7 @@ val gitHubInfo = AppInfo(
             " The developer provided this information and may update it over time",
 )
 
-val emptyInfo = AppInfo(
+val emptyAppInfo = AppInfo(
     name = "",
     publisherName = "",
     rating = "",

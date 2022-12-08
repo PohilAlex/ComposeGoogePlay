@@ -14,7 +14,16 @@ class AppDetailsViewModel : ViewModel() {
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(),
-                initialValue = emptyInfo
+                initialValue = emptyAppInfo
+            )
+    }
+
+    fun getAppDetails(): StateFlow<AppDetails> {
+        return flowOf(gitHubAppDetails)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = emptyAppDetails
             )
     }
 }
