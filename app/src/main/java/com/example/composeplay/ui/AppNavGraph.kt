@@ -23,6 +23,6 @@ fun AppNavGraph(
         composable(APP_FULL_INFO) { ApplicationFullInfoScreen(viewModel, openAboutScreen = {
             navController.navigate(APP_DETAILS)
         }) }
-        composable(APP_DETAILS) { AboutAppScreen(viewModel) }
+        composable(APP_DETAILS) { AboutAppScreen(viewModel, navigateBack = { navController.popBackStack() } ) }
     }
 }

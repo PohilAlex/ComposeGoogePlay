@@ -7,4 +7,7 @@
     <string name="data_safety">Data safety</string>
     <string name="about_this_app">About this app</string>
     <string name="what_new">What\'s new</string>
+    <string name="back_button">Back Button</string>
+    <string name="search_button">Search Button</string>
+    <string name="menu_button">Menu Button</string>
 </resources>

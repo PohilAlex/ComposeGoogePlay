@@ -1,5 +1,6 @@
 package com.example.composeplay.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -23,8 +24,17 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +55,7 @@ import com.example.composeplay.model.gitHubInfo
 import com.example.composeplay.ui.theme.ComposePlayTheme
 
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 @OptIn(ExperimentalLifecycleComposeApi::class)
 fun ApplicationFullInfoScreen(
@@ -52,25 +63,52 @@ fun ApplicationFullInfoScreen(
     openAboutScreen: () -> Unit
 ) {
     val state = viewModel.getAppInfo().collectAsStateWithLifecycle()
-    ApplicationFullInfo(state.value, openAboutScreen)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { /*Text("GitHub") */ },
+                backgroundColor = MaterialTheme.colors.background,
+                navigationIcon = {
+                    IconButton(onClick = { }) {
+                        Icon(Icons.Filled.ArrowBack, stringResource(R.string.back_button))
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(Icons.Filled.Search, stringResource(R.string.search_button))
+                    }
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(Icons.Filled.MoreVert, stringResource(R.string.menu_button))
+                    }
+                }
+            )
+        },
+        content = { paddingValues ->
+            ApplicationFullInfo(state.value, paddingValues, openAboutScreen)
+        }
+    )
+
 }
 
 @Composable
 private fun ApplicationFullInfo(
     appInfo: AppInfo,
+    paddingValues: PaddingValues,
     openAboutScreen: () -> Unit
 ) {
-    Column(modifier = Modifier
-        .padding(horizontal = 24.dp)
-        .verticalScroll(rememberScrollState())
+    Column(
+        modifier = Modifier
+            .padding(paddingValues)
+            .verticalScroll(rememberScrollState())
     ) {
-        Spacer(Modifier.height(24.dp))
         AppHeader(appInfo)
         Spacer(Modifier.height(16.dp))
         AppGeneralInfo(appInfo)
         Spacer(Modifier.height(16.dp))
         Button(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
             shape = RoundedCornerShape(16.dp),
             onClick = { /*TODO*/ },
         ) {
@@ -91,7 +129,7 @@ private fun ApplicationFullInfo(
 
 @Composable
 private fun AppHeader(appInfo: AppInfo) {
-    Row(modifier = Modifier.padding(top = 12.dp)) {
+    Row(modifier = Modifier.padding(top = 12.dp, start = 24.dp, end = 24.dp)) {
         Image(
             painter = painterResource(id = R.drawable.app_logo),
             contentDescription = stringResource(R.string.description_app_icon),
@@ -116,8 +154,10 @@ private fun AppHeader(appInfo: AppInfo) {
 @Composable
 private fun AppGeneralInfo(appInfo: AppInfo) {
     Row(
-        modifier = Modifier.height(IntrinsicSize.Min),
-        verticalAlignment = Alignment.Bottom
+        modifier = Modifier
+            .height(IntrinsicSize.Min)
+            .padding(horizontal = 24.dp),
+        verticalAlignment = Alignment.Bottom,
     ) {
         DetailsRating(this, appInfo)
         Divider(
@@ -210,7 +250,10 @@ private fun DetailsAge(scope: RowScope, appInfo: AppInfo) {
 
 @Composable
 private fun ScreenshotCarousel(screenshotRes: List<Int>) {
-    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.padding(horizontal = 24.dp)
+    ) {
         items(screenshotRes) {
             Image(
                 painter = painterResource(id = it),
@@ -225,8 +268,9 @@ private fun ScreenshotCarousel(screenshotRes: List<Int>) {
 private fun AboutSection(
     aboutApp: String,
     tags: List<String>,
-    openAboutScreen: () -> Unit) {
-    Column {
+    openAboutScreen: () -> Unit
+) {
+    Column(modifier = Modifier.padding(horizontal = 24.dp)) {
         Button(
             colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
             elevation = null,
@@ -279,7 +323,7 @@ private fun AboutTagList(tags: List<String>) {
 
 @Composable
 private fun SafetySection(dataSafety: String) {
-    Column {
+    Column(modifier = Modifier.padding(horizontal = 24.dp)) {
         Button(
             colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
             elevation = null,
@@ -314,6 +358,7 @@ fun DefaultPreview() {
     ComposePlayTheme {
         ApplicationFullInfo(
             appInfo = gitHubInfo,
+            paddingValues = PaddingValues(),
             openAboutScreen = {}
         )
     }
@@ -325,6 +370,7 @@ fun DefaultPreviewDark() {
     ComposePlayTheme(darkTheme = true) {
         ApplicationFullInfo(
             appInfo = gitHubInfo,
+            paddingValues = PaddingValues(),
             openAboutScreen = {}
         )
     }
