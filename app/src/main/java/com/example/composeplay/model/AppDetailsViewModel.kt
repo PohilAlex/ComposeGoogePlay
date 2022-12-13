@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 class AppDetailsViewModel : ViewModel() {
@@ -24,6 +25,16 @@ class AppDetailsViewModel : ViewModel() {
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(),
                 initialValue = emptyAppDetails
+            )
+    }
+
+    fun getAppScreenshot(): StateFlow<List<Int>> {
+        return flowOf(gitHubInfo)
+            .map { it.screenshotRes }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = emptyList()
             )
     }
 }

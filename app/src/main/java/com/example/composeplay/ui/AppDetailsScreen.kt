@@ -3,6 +3,7 @@ package com.example.composeplay.ui
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -60,7 +62,8 @@ import com.example.composeplay.ui.theme.ComposePlayTheme
 @OptIn(ExperimentalLifecycleComposeApi::class)
 fun ApplicationFullInfoScreen(
     viewModel: AppDetailsViewModel,
-    openAboutScreen: () -> Unit
+    openAboutScreen: () -> Unit,
+    openImages: (Int) -> Unit
 ) {
     val state = viewModel.getAppInfo().collectAsStateWithLifecycle()
     Scaffold(
@@ -84,7 +87,7 @@ fun ApplicationFullInfoScreen(
             )
         },
         content = { paddingValues ->
-            ApplicationFullInfo(state.value, paddingValues, openAboutScreen)
+            ApplicationFullInfo(state.value, paddingValues, openAboutScreen, openImages)
         }
     )
 
@@ -94,7 +97,8 @@ fun ApplicationFullInfoScreen(
 private fun ApplicationFullInfo(
     appInfo: AppInfo,
     paddingValues: PaddingValues,
-    openAboutScreen: () -> Unit
+    openAboutScreen: () -> Unit,
+    openImages: (Int) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -118,7 +122,7 @@ private fun ApplicationFullInfo(
             )
         }
         Spacer(Modifier.height(16.dp))
-        ScreenshotCarousel(appInfo.screenshotRes)
+        ScreenshotCarousel(appInfo.screenshotRes, openImages)
         Spacer(Modifier.height(16.dp))
         AboutSection(appInfo.aboutApp, appInfo.tags, openAboutScreen)
         Spacer(Modifier.height(16.dp))
@@ -249,16 +253,21 @@ private fun DetailsAge(scope: RowScope, appInfo: AppInfo) {
 }
 
 @Composable
-private fun ScreenshotCarousel(screenshotRes: List<Int>) {
+private fun ScreenshotCarousel(
+    screenshotRes: List<Int>,
+    openImages: (Int) -> Unit
+) {
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.padding(horizontal = 24.dp)
     ) {
-        items(screenshotRes) {
+        itemsIndexed(screenshotRes) { position, item ->
             Image(
-                painter = painterResource(id = it),
+                painter = painterResource(id = item),
                 contentDescription = stringResource(R.string.screenshot_description),
-                modifier = Modifier.height(150.dp),
+                modifier = Modifier
+                    .height(150.dp)
+                    .clickable { openImages(position) },
             )
         }
     }
@@ -359,7 +368,8 @@ fun DefaultPreview() {
         ApplicationFullInfo(
             appInfo = gitHubInfo,
             paddingValues = PaddingValues(),
-            openAboutScreen = {}
+            openAboutScreen = {},
+            openImages = {}
         )
     }
 }
@@ -371,7 +381,8 @@ fun DefaultPreviewDark() {
         ApplicationFullInfo(
             appInfo = gitHubInfo,
             paddingValues = PaddingValues(),
-            openAboutScreen = {}
+            openAboutScreen = {},
+            openImages = {}
         )
     }
 }
