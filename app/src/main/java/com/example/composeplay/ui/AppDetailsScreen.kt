@@ -1,6 +1,9 @@
 package com.example.composeplay.ui
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -34,10 +37,13 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,9 +56,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.composeplay.R
 import com.example.composeplay.model.AppDetailsViewModel
 import com.example.composeplay.model.AppInfo
-import com.example.composeplay.R
 import com.example.composeplay.model.gitHubInfo
 import com.example.composeplay.ui.theme.ComposePlayTheme
 
@@ -314,16 +320,27 @@ private fun AboutSection(
 private fun AboutTagList(tags: List<String>) {
     LazyRow {
         items(tags) {
+            var isColored by remember { mutableStateOf(false) }
+            val buttonColor by animateColorAsState(
+                targetValue = if (isColored) MaterialTheme.colors.primary else MaterialTheme.colors.surface,
+                animationSpec = tween(durationMillis = 500, easing = LinearEasing),
+            )
+            val textColor by animateColorAsState(
+                targetValue = if (isColored) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface,
+                animationSpec = tween(durationMillis = 500, easing = LinearEasing)
+            )
             Button(
-                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
+                colors = ButtonDefaults.buttonColors(buttonColor),
                 shape = RoundedCornerShape(8.dp),
                 border = BorderStroke(0.5.dp, MaterialTheme.colors.onSurface),
                 elevation = null,
-                onClick = { /*TODO*/ }
+                onClick = {
+                    isColored = !isColored
+                }
             ) {
                 Text(
                     text = it,
-                    color = MaterialTheme.colors.onSurface
+                    color = textColor
                 )
             }
         }
